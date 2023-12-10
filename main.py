@@ -5,14 +5,12 @@ import os
 import subprocess
 from pygame import mixer
 from PIL import Image, ImageTk
+import threading
 
 def on_validate(char, entry_value):
     # Allow only digits and a single dot
     return char.isdigit() or (char == "." and "." not in entry_value)
 
-def on_submit():
-    # Your submit logic here
-    pass
 
 def DOS_ON_SUBMIT():
     play_dos_music()
@@ -39,20 +37,36 @@ def PING():
     frame.pack()
     Port.grid_forget()
     label_2.grid_forget()
-
-    def back():
-        frame.pack_forget()
-        button_ping.pack()
-        button_DDoS.pack()
-        back.place_forget()
-        Autorun_button.pack()
+    def SPWIF():
+        while IPA.get() == '':
+            submit_button.config(state=DISABLED)
+        submit_button.config(state=ACTIVE)
+    x = threading.Thread(target=SPWIF)
+    x.start()
+        
+    
 
     back = Button(root, text='BACK', font=('Comic Sans', 10), command=back, bg='black', fg='lime')
     back.place(x=850, y=0)
     
     def on_ping_submit():
-        host_to_ping = IPA.get()
-        ping(host_to_ping)
+        global label_SPWIF
+        if IPA.get()=='':
+            submit_button.config(state=DISABLED)
+            print('')
+        else:
+            host_to_ping = IPA.get()
+            label_SPWIF =Label(root,text=str(host_to_ping),font=('Comic Sans',20))
+            label_SPWIF.pack()
+    
+    def back():
+        global label_SPWIF
+        label_SPWIF.pack_forget()
+        frame.pack_forget()
+        button_ping.pack()
+        button_DDoS.pack()
+        back.place_forget()
+        Autorun_button.pack()
 
     submit_button.config(text="Ping IP", command=on_ping_submit)
 
@@ -162,9 +176,6 @@ result_label = tk.Label(frame, text="", font=('Arial', 20), fg='lime', bg='black
 result_label.grid(row=3, column=0)
 
 # Submit Button
-submit_button = tk.Button(frame, text="Submit", command=on_submit, font=('Arial', 20), bg='black', fg='lime')
-submit_button.grid(row=2, column=0)
-
 button_ping = Button(root, image=ping_image, borderwidth=0, command=PING, bg='black')
 button_ping.pack()
 
