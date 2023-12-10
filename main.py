@@ -1,22 +1,30 @@
 from tkinter import *
 import tkinter as tk
-from tkinter import messagebox
 from tkinter import colorchooser
 import os
+import subprocess
+from pygame import mixer
+from PIL import Image, ImageTk
 
-current_directory = os.getcwd()
-folder_name = "Pictures"
-folder_path = os.path.join(current_directory, folder_name)
-
-
-def validate_input(char):
-    return char.isdigit() or char == "."
-def validate_input1(char):
-    return char.isdigit()
+def on_validate(char, entry_value):
+    # Allow only digits and a single dot
+    return char.isdigit() or (char == "." and "." not in entry_value)
 
 def on_submit():
-    # Write your code here and delete the 'pass'
+    # Your submit logic here
     pass
+
+def DOS_ON_SUBMIT():
+    play_dos_music()
+
+def ping(host):
+    try:
+        result = subprocess.run(['ping', '-c', '4', host], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = f"{host} is on means you can DDoS it!."
+    except subprocess.CalledProcessError:
+        output = f"{host} is off means you cannot DDoS it.."
+    
+    result_label.config(text=output)
 
 def change_color():
     global color
@@ -31,14 +39,27 @@ def PING():
     frame.pack()
     Port.grid_forget()
     label_2.grid_forget()
-    def cancle():
+
+    def back():
         frame.pack_forget()
         button_ping.pack()
         button_DDoS.pack()
-        Cancle.place_forget()
+        back.place_forget()
         Autorun_button.pack()
-    Cancle = Button(root, text='CANCEL', font=('Comic Sans', 10), command=cancle)
-    Cancle.place(x=730, y=0)
+
+    back = Button(root, text='BACK', font=('Comic Sans', 10), command=back, bg='black', fg='lime')
+    back.place(x=850, y=0)
+    
+    def on_ping_submit():
+        host_to_ping = IPA.get()
+        ping(host_to_ping)
+
+    submit_button.config(text="Ping IP", command=on_ping_submit)
+
+def play_dos_music():
+    # Load and play DOS music once
+    dos_music = mixer.Sound(os.path.join(folder_name_Music, "DOS.mp3"))
+    dos_music.play()
 
 def DDoS():
     Autorun_button.pack_forget()
@@ -50,15 +71,16 @@ def DDoS():
     label_2.grid(row=1, column=0)
     Port.grid(row=1, column=1)
 
-    def cancle():
+    def back():
         frame.pack_forget()
         button_ping.pack()
         button_DDoS.pack()
-        Cancle.place_forget()
+        back.place_forget()
         Autorun_button.pack()
 
-    Cancle = Button(root, text='CANCEL', font=('Comic Sans', 10), command=cancle)
-    Cancle.place(x=730, y=0)
+    back = Button(root, text='BACK', font=('Comic Sans', 10), command=back, bg='black', fg='lime')
+    back.place(x=850, y=0)
+    submit_button.config(text="DOS Attack Start", command=DOS_ON_SUBMIT)
 
 def Autorun():
     Autorun_button.pack_forget()
@@ -70,36 +92,54 @@ def Autorun():
     label_2.grid(row=1, column=0)
     Port.grid(row=1, column=1)
 
-    def cancle():
+    def back():
         frame.pack_forget()
         button_ping.pack()
         button_DDoS.pack()
-        Cancle.place_forget()
+        back.place_forget()
         Autorun_button.pack()
 
-    Cancle = Button(root, text='CANCEL', font=('Comic Sans', 10), command=cancle)
-    Cancle.place(x=730, y=0)
+    back = Button(root, text='BACK', font=('Comic Sans', 10), command=back, bg='black', fg='lime')
+    back.place(x=850, y=0)
+    submit_button.config(text="Autorun DDoS Attack", command=DOS_ON_SUBMIT)
+
+# Initialize the mixer
+mixer.init()
+
+current_directory = os.getcwd()
+folder_name_Pictures = "Pictures"
+folder_name_Music = "Music"
+
+folder_path_Music = os.path.join(current_directory, folder_name_Music)
+folder_path_Pictures = os.path.join(current_directory, folder_name_Pictures)
+
+# Load the default music file
+music1 = mixer.Sound(os.path.join(folder_name_Music, "Music1.mp3"))
+
+# Set the volume (from 0.0 to 1.0)
+music1.set_volume(0.5)
+
+# Start playing the default music with looping
+music1.play(-1)
 
 root = tk.Tk()
-root.title("Input Window")
-root.geometry("800x500")
-
-hack_image_path = os.path.join(folder_path, "hacked.png")
-ping_image_path = os.path.join(folder_path, "PING.png")
-ddos_image_path = os.path.join(folder_path, "DDoS.png")
-autorun_image_path = os.path.join(folder_path, "Autorun.png")
-
-hack_image = PhotoImage(file=hack_image_path)
-ping_image = PhotoImage(file=ping_image_path)
-ddos_image = PhotoImage(file=ddos_image_path)
-autorun_image = PhotoImage(file=autorun_image_path)
-
+root.title("Hack Theme Window")
+root.geometry("1200x500")
 root.resizable(False, False)
-root.iconphoto(True, hack_image)
 
-change_color_button = Button(root, text='change color', font=('Arial', 20), command=change_color)
+hack_image_path = os.path.join(folder_path_Pictures, "Icon.png")
+ping_image_path = os.path.join(folder_path_Pictures, "PING.png")
+ddos_image_path = os.path.join(folder_path_Pictures, "DDOS.png")
+autorun_image_path = os.path.join(folder_path_Pictures, "AUTORUN.png")
+
+hack_image = ImageTk.PhotoImage(Image.open(hack_image_path))
+ping_image = ImageTk.PhotoImage(Image.open(ping_image_path))
+ddos_image = ImageTk.PhotoImage(Image.open(ddos_image_path))
+autorun_image = ImageTk.PhotoImage(Image.open(autorun_image_path))
+
+change_color_button = Button(root, text='change color', font=('Arial', 20), command=change_color, bg='black', fg='lime')
 change_color_button.place(x=0, y=450)
-color = 'white'
+color = 'black'
 frame = Frame(root, bg=color)
 frame.pack()
 frame.pack_forget()
@@ -108,28 +148,30 @@ frame.pack_forget()
 label_1 = tk.Label(frame, text="Import your IP address: ", font=('Arial', 20), fg='lime', bg='black')
 label_1.grid(row=0, column=0)
 
-validate_input_1 = root.register(validate_input)
-IPA = tk.Entry(frame, validate="key", validatecommand=(validate_input_1, "%S"), font=('Arial', 20), bg='pink')
+IPA = tk.Entry(frame, font=('Arial', 20), bg='pink', fg='black', validate="key", validatecommand=(root.register(on_validate), "%S", "%P"))
 IPA.grid(row=0, column=1)
 
 # Label and Entry for Input 2
 label_2 = tk.Label(frame, text="Import your Port number: ", font=('Arial', 20), fg='lime', bg='black')
 label_2.grid(row=1, column=0)
-validate_input_2 = root.register(validate_input1)
-Port = tk.Entry(frame, validate="key", validatecommand=(validate_input_2, "%S"), font=('Arial', 20), bg='pink')
+Port = tk.Entry(frame, font=('Arial', 20), bg='pink', fg='black', validate="key", validatecommand=(root.register(on_validate), "%S", "%P"))
 Port.grid(row=1, column=1)
 
+# Result Label
+result_label = tk.Label(frame, text="", font=('Arial', 20), fg='lime', bg='black')
+result_label.grid(row=3, column=0)
+
 # Submit Button
-submit_button = tk.Button(frame, text="Ping IP", command=on_submit, font=('Arial', 20))
+submit_button = tk.Button(frame, text="Submit", command=on_submit, font=('Arial', 20), bg='black', fg='lime')
 submit_button.grid(row=2, column=0)
 
-button_ping = Button(root, image=ping_image, command=PING, borderwidth=0)
+button_ping = Button(root, image=ping_image, borderwidth=0, command=PING, bg='black')
 button_ping.pack()
 
-button_DDoS = Button(root, image=ddos_image, borderwidth=0, command=DDoS)
+button_DDoS = Button(root, image=ddos_image, borderwidth=0, command=DDoS, bg='black')
 button_DDoS.pack()
 
-Autorun_button = Button(root, image=autorun_image, borderwidth=0, command=Autorun)
+Autorun_button = Button(root, image=autorun_image, borderwidth=0, command=Autorun, bg='black')
 Autorun_button.pack()
 
 root.mainloop()
