@@ -38,9 +38,11 @@ def PING():
     Port.grid_forget()
     label_2.grid_forget()
     def SPWIF():
-        while IPA.get() == '':
-            submit_button.config(state=DISABLED)
-        submit_button.config(state=ACTIVE)
+        while True:
+            if IPA.get() == '':
+                submit_button.config(state=DISABLED)
+            else: 
+                submit_button.config(state=ACTIVE)
     x = threading.Thread(target=SPWIF)
     x.start()
         
