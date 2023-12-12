@@ -52,11 +52,7 @@ def PING():
     back.place(x=850, y=0)
     
     def on_ping_submit():
-        global label_SPWIF
-        if IPA.get()=='':
-            submit_button.config(state=DISABLED)
-            print('')
-        else:
+            global label_SPWIF
             host_to_ping = IPA.get()
             label_SPWIF =Label(root,text=str(host_to_ping),font=('Comic Sans',20))
             label_SPWIF.pack()
